@@ -10,6 +10,7 @@ type Flags struct {
   Prefix     string
   Quiet      bool
   SkipChecks bool
+  Version    bool
 }
 
 var config Flags
@@ -17,12 +18,17 @@ var config Flags
 func init() {
   flag.StringVar(&config.Delimeter, "d", ":", "delimeter used to split environment variable values")
   flag.StringVar(&config.Prefix, "p", "QUARK_", "prefix to search for in environment variables")
-  flag.BoolVar(&config.Quiet, "q", false, "supress stdout messages")
+  flag.BoolVar(&config.Quiet, "q", false, "suppress stdout messages")
   flag.BoolVar(&config.SkipChecks, "s", false, "skip checks for keys in file")
+  flag.BoolVar(&config.Version, "v", false, "show version information")
 }
 
 func main() {
   flag.Parse()
+
+  if config.Version {
+    PrintVersion()
+  }
 
   InfoLine("starting quark...")
 

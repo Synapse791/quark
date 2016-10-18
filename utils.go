@@ -26,6 +26,11 @@ func PrintUsage() {
   flag.Usage()
 }
 
+func PrintVersion() {
+  fmt.Printf("quark version %s\n", VERSION)
+  os.Exit(0)
+}
+
 func ErrorLine(message string, args... interface{}) {
   formattedMessage := fmt.Sprintf(message, args...)
   fmt.Printf("\033[31m!\033[00m  \033[31mERROR: %s\033[00m\n", formattedMessage)
@@ -64,7 +69,7 @@ func ReplaceInFile(filePath string, pairs map[string]string) error {
   contents := string(rawContents)
 
   for key, value := range pairs {
-    InfoLine("replacing '%s' in '%s' with '%s'...", filePath, key, value)
+    InfoLine("replacing '%s' in '%s' with '%s'...", key, filePath, value)
     contents = strings.Replace(contents, key, value, -1)
   }
 
