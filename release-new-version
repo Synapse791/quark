@@ -5,6 +5,11 @@ if [[ ! -x $(which git) ]]; then
 	exit 1
 fi
 
+if [[ ! -x $(which go) ]]; then
+	echo -e "\e[31m!  ERROR: Can't find the Go executable\e[00m"
+	exit 1
+fi
+
 if [ ! -z "`git status -s`" ]; then
   echo -e "\e[31m!  ERROR: please ensure you have added and committed all your changes first\e[00m"
   exit 1
