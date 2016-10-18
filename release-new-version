@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ ! -z "`git status -s`" ]; then
+  echo -e "\e[31m!  ERROR: please ensure you have added and committed all your changes first\e[00m"
+  exit 1
+fi
+
+echo -ne "\e[01mEnter new version: \e[00m"
+read NEW_VERSION
+
+echo -n "+  Updating readme.md..."
+sed -i 's,download/.*/quark,download/'$NEW_VERSION'/quark,g' readme.md || { exit 1; }
+echo -e "\e[32mdone\e[00m"
+
+echo -n "+  Updating version.go..."
+sed -i 's,VERSION = ".*",VERSION = "'$NEW_VERSION'",g' version.go || { exit 1; }
+echo -e "\e[32mdone\e[00m"
+
+echo -n "+  Building quark binary..."
+go build . || { exit 1; }
+echo -e "\e[32mdone\e[00m"
+
+if [ ! -z "`git status -s`" ]; then
+  echo -n "+  Committing changes..."
+  git add . 1>/dev/null || { exit 1; }
+  git commit -m "Preparing release $NEW_VERSION" 1>/dev/null || { exit 1; }
+  echo -e "\e[32mdone\e[00m"
+fi
+
+echo -n "+  Tagging code..."
+git tag -a "$NEW_VERSION" || { exit 1; }
+echo -e "\e[32mdone\e[00m"
+
+echo "+  Don't forget to push and upload the binary!"
+
+echo -e "\ngit push origin master"
+echo "git push --tags origin master"
