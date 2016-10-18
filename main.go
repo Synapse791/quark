@@ -50,7 +50,7 @@ func main() {
   extractor.Run()
 
   if len(extractor.EnvVars) == 0 {
-    ErrorLine("no environment varables found")
+    ErrorLine("no environment variables found")
   } else if len(extractor.EnvVars) == 1 {
     InfoLine("found %d environment variable!", len(extractor.EnvVars))
   } else {
