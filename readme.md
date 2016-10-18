@@ -9,7 +9,7 @@ Quark was created to set config values inside docker containers at runtime. This
 Just download the latest release binary from the [releases page](https://github.com/Synapse791/quark/releases/latest)! If you need Quark to be executable globally, run the following commands:
 
 ```sh
-curl -sSL https://github.com/Synapse791/quark/releases/download/1.0/quark
+curl -sSL https://github.com/Synapse791/quark/releases/download/1.0/quark | sudo tee /usr/local/bin/quark
 sudo chmod 755 /usr/local/bin/quark
 ```
 
