@@ -6,20 +6,20 @@ import(
 )
 
 type Flags struct {
-  Delimeter  string
-  Prefix     string
-  Quiet      bool
-  SkipChecks bool
-  Version    bool
+  Delimeter string
+  Force     bool
+  Prefix    string
+  Quiet     bool
+  Version   bool
 }
 
 var config Flags
 
 func init() {
   flag.StringVar(&config.Delimeter, "d", ":", "delimeter used to split environment variable values")
+  flag.BoolVar(&config.Force, "f", false, "don't exit if a key is not found in a file")
   flag.StringVar(&config.Prefix, "p", "QUARK_", "prefix to search for in environment variables")
   flag.BoolVar(&config.Quiet, "q", false, "suppress stdout messages")
-  flag.BoolVar(&config.SkipChecks, "s", false, "skip checks for keys in file")
   flag.BoolVar(&config.Version, "v", false, "show version information")
 }
 
@@ -40,7 +40,7 @@ func main() {
     ErrorLine("delimeter cannot be empty")
   }
 
-  if config.SkipChecks {
+  if config.Force {
     InfoLine("skipping key checks")
   }
 
@@ -78,10 +78,13 @@ func main() {
       ErrorLine("file '%s' does not exist", filePath)
     }
 
-    if ! config.SkipChecks {
+    if ! config.Force {
       if ! CheckForKey(filePath, key) {
         ErrorLine("key '%s' not found in '%s'", key, filePath)
       }
+    } else if ! CheckForKey(filePath, key) {
+      WarningLine("key '%s' not found in '%s'", key, filePath)
+      continue
     }
 
     if _, ok := replacements[filePath]; !ok {
@@ -104,5 +107,16 @@ func main() {
 
   }
 
-  SuccessLine("successfully processed %d environment variable in %d files!", len(extractor.EnvVars), len(replacements))
+  fileCount := len(replacements)
+  var envCount int
+
+  for _, pairs := range replacements {
+    envCount = envCount + len(pairs)
+  }
+
+  if fileCount == 0 || envCount == 0 {
+    WarningLine("nothing to process. 0 files and 0 environment variables")
+  } else {
+    SuccessLine("successfully processed %d environment variable in %d files!", envCount, len(replacements))
+  }
 }

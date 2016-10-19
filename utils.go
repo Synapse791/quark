@@ -11,14 +11,14 @@ import (
 func InfoLine(message string, args... interface{}) {
   if ! config.Quiet {
     formattedMessage := fmt.Sprintf(message, args...)
-    fmt.Printf("\033[34m+\033[00m  %s\n", formattedMessage)
+    fmt.Fprintf(os.Stdout, "\033[34m+\033[00m  %s\n", formattedMessage)
   }
 }
 
 func SuccessLine(message string, args... interface{}) {
   if ! config.Quiet {
     formattedMessage := fmt.Sprintf(message, args...)
-    fmt.Printf("\033[32m+\033[00m  \033[32m%s\033[00m\n", formattedMessage)
+    fmt.Fprintf(os.Stdout, "\033[32m+\033[00m  \033[32m%s\033[00m\n", formattedMessage)
   }
 }
 
@@ -31,9 +31,14 @@ func PrintVersion() {
   os.Exit(0)
 }
 
+func WarningLine(message string, args... interface{}) {
+  formattedMessage := fmt.Sprintf(message, args...)
+  fmt.Fprintf(os.Stderr, "\033[33m+\033[00m  \033[33mWARNING: %s\033[00m\n", formattedMessage)
+}
+
 func ErrorLine(message string, args... interface{}) {
   formattedMessage := fmt.Sprintf(message, args...)
-  fmt.Printf("\033[31m!\033[00m  \033[31mERROR: %s\033[00m\n", formattedMessage)
+  fmt.Fprintf(os.Stderr, "\033[31m!\033[00m  \033[31mERROR: %s\033[00m\n", formattedMessage)
   os.Exit(1)
 }
 
